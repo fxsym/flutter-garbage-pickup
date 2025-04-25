@@ -4,11 +4,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome Page'),
-        centerTitle: true,
-        backgroundColor: Colors.green, // Tema hijau di AppBar
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -20,7 +15,7 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green[800], // Warna hijau gelap untuk teks
+                  color: Colors.black,
                 ),
               ),
               SizedBox(height: 24),
@@ -28,7 +23,7 @@ class HomePage extends StatelessWidget {
                 'Temukan cara mudah tukar sampah dan bantu lingkungan!',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey[600], // Teks pendukung lebih ringan
+                  color: Colors.grey[700], // Teks pendukung lebih ringan
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -38,7 +33,7 @@ class HomePage extends StatelessWidget {
                   Navigator.pushNamed(context, '/login');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.purple[700],
                   foregroundColor: Colors.white, // Text color
                   elevation: 2,
                   minimumSize: Size(double.infinity, 48), // Full width
@@ -62,8 +57,8 @@ class HomePage extends StatelessWidget {
                 },
                 child: Text('Register'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.green,
-                  side: BorderSide(color: Colors.green), // Border hijau
+                  foregroundColor: Colors.purple[700],
+                  side: BorderSide(color: Colors.purple), // Border hijau
                   minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -112,10 +112,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 validator: (value) =>
@@ -129,10 +129,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 items: ['Laki-laki', 'Perempuan'].map((gender) {
@@ -157,10 +157,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 validator: (value) =>
@@ -175,10 +175,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 validator: (value) =>
@@ -192,10 +192,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 keyboardType: TextInputType.emailAddress,

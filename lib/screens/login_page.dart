@@ -48,10 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text("Login berhasil")),
       );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardPage()),
-      );
+      Navigator.pushReplacementNamed(context, '/dashboard');
     } on FirebaseAuthException catch (e) {
       String message = 'Terjadi kesalahan saat login.';
 
@@ -107,10 +104,10 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderSide: BorderSide(color: Colors.purple, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderSide: BorderSide(color: Colors.purple, width: 2),
                         ),
                       ),
                       validator: (value) => value!.isEmpty
@@ -125,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderSide: BorderSide(color: Colors.purple, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2),
+                          borderSide: BorderSide(color: Colors.purple, width: 2),
                         ),
                       ),
                       obscureText: true,
@@ -142,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: _login,
                             child: Text('Login'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor: Colors.purple,
                               foregroundColor: Colors.white, // Text color
                               elevation: 2,
                               minimumSize:
