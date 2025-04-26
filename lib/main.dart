@@ -6,6 +6,7 @@ import 'screens/login_page.dart';
 import 'screens/register_page.dart';
 import 'screens/pickup_pages.dart';
 import 'screens/main_screen.dart';
+import 'screens/main_screen_admin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/dashboard': (context) => MainScreen(),
+        '/dashboard_admin': (context) => MainScreenAdmin(),
         '/pickup': (context) => PickupPage(),
       },
     );

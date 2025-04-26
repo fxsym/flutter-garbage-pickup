@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dashboard_page.dart'; // pastikan file ini ada
+import 'dashboard_page.dart'; 
+import 'dashboard_admin_page.dart'; // pastikan file ini ada
 
 class LoginPage extends StatefulWidget {
   @override
@@ -41,14 +42,32 @@ class _LoginPageState extends State<LoginPage> {
         email = snapshot.docs.first['email'];
       }
 
-      await FirebaseAuth.instance
+      UserCredential credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+
+      // Setelah login, ambil role user
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(credential.user!.uid)
+          .get();
+
+      if (!userSnapshot.exists) {
+        throw Exception('Data pengguna tidak ditemukan');
+      }
+
+      String role = userSnapshot['role']; // Pastikan field 'role' ada di Firestore
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Login berhasil")),
       );
 
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      if (role == 'pelanggan') {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+      } else if (role == 'petugas') {
+        Navigator.pushReplacementNamed(context, '/dashboard_admin');
+      } else {
+        throw Exception('Role tidak dikenali');
+      }
     } on FirebaseAuthException catch (e) {
       String message = 'Terjadi kesalahan saat login.';
 
@@ -83,17 +102,14 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
       body: Center(
-        // Menggunakan Center untuk memusatkan seluruh konten
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: SingleChildScrollView(
-            // Scrollable jika konten lebih besar dari layar
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600), // Maksimal lebar form
+              constraints: BoxConstraints(maxWidth: 600),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  // Menggunakan Column agar widget berada di tengah secara vertikal
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -140,10 +156,9 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text('Login'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.purple,
-                              foregroundColor: Colors.white, // Text color
+                              foregroundColor: Colors.white,
                               elevation: 2,
-                              minimumSize:
-                                  Size(double.infinity, 48), // Full width
+                              minimumSize: Size(double.infinity, 48),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
