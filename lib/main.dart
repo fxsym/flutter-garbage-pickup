@@ -4,7 +4,7 @@ import 'firebase_options.dart';
 import 'screens/home_page.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
-import 'screens/dashboard_page.dart';
+import 'screens/pickup_pages.dart';
 import 'screens/main_screen.dart';
 
 void main() async {
@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/dashboard': (context) => MainScreen(),
+        '/pickup': (context) => PickupPage(),
       },
     );
   }
