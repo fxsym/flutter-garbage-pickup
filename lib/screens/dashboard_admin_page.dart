@@ -60,13 +60,13 @@ class _DashboardAdminPageState extends State<DashboardAdminPage> {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
+                      color: Colors.black,
                     ),
                   ),
             SizedBox(height: 12),
             Text(
               'Selamat datang di halaman admin. 🌟',
-              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
             SizedBox(height: 24),
 

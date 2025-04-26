@@ -163,7 +163,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: _updateProfile,
                       child: Text("Simpan Perubahan"),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purple[400],
                         minimumSize: Size(double.infinity, 50),
                         textStyle: TextStyle(fontSize: 18),
                       ),
