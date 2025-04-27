@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AktivitasAdminPage extends StatefulWidget {
   const AktivitasAdminPage({super.key});
@@ -12,6 +13,10 @@ class AktivitasAdminPage extends StatefulWidget {
 
 class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
   Stream<QuerySnapshot> getOrders(String status) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Stream.empty(); // Handle case ketika belum login
+    }
     return FirebaseFirestore.instance
         .collection('orders')
         .where('status', isEqualTo: status)
@@ -20,27 +25,29 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
   }
 
   Future<void> updateStatusToCompleted(String orderId) async {
-    await FirebaseFirestore.instance.collection('orders').doc(orderId).update({
-      'status': 'Completed',
-    });
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(orderId)
+        .update({'status': 'Completed'});
   }
 
-  // UPDATE: Fungsi hapus order
   Future<void> deleteOrder(String orderId) async {
     await FirebaseFirestore.instance.collection('orders').doc(orderId).delete();
   }
 
   Future<void> _launchGoogleMap(String mapUrl) async {
-    if (await canLaunch(mapUrl)) {
-      await launch(mapUrl);
+    final uri = Uri.parse(mapUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      throw 'Tidak dapat membuka link Google Maps';
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak dapat membuka link')),
+      );
     }
   }
 
   String formatTimestamp(Timestamp timestamp) {
-    DateTime date = timestamp.toDate();
-    return DateFormat('dd MMM yyyy, HH:mm').format(date);
+    return DateFormat('dd MMM yyyy, HH:mm').format(timestamp.toDate());
   }
 
   @override
@@ -64,8 +71,8 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
           Expanded(
             child: TabBarView(
               children: [
-                _buildOrderList('Pending', showCompleteButton: true),
-                _buildOrderList('Completed', showDeleteButton: true), // UPDATE
+                _buildOrderList('Pending'),
+                _buildOrderList('Completed'),
               ],
             ),
           ),
@@ -92,21 +99,19 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
           return const Center(child: Text('Belum ada data'));
         }
 
-        final orders = snapshot.data!.docs;
+        final docs = snapshot.data!.docs;
 
         return ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
+          itemCount: docs.length,
+          itemBuilder: (context, i) {
+            final order = docs[i];
             final data = order.data() as Map<String, dynamic>;
-
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               color: Colors.purple[200],
               elevation: 8,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+                  borderRadius: BorderRadius.circular(16)),
               shadowColor: Colors.purple.withOpacity(0.3),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -114,104 +119,78 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildRowWithIcon(
-                      Icons.person,
-                      data['nama']?.toString() ?? '-',
-                      fontSize: 26,
-                      vertical: 2,
-                    ),
-                    _buildSubHeading(
-                      '${formatTimestamp(data['createdAt'])}',
-                      fontSize: 14,
-                    ),
+                        Icons.person, data['nama']?.toString() ?? '-',
+                        fontSize: 26, vertical: 2),
+                    _buildSubHeading(formatTimestamp(data['createdAt']),
+                        fontSize: 14),
                     _buildRowWithIcon(
-                      Icons.location_on,
-                      data['alamat']?.toString() ?? '-',
-                      fontSize: 18,
-                    ),
-                    if (data['titikjemput'] != null &&
-                        data['titikjemput'].toString().isNotEmpty)
+                        Icons.location_on, data['alamat']?.toString() ?? '-',
+                        fontSize: 18),
+                    if ((data['titikjemput'] as String?)?.isNotEmpty ?? false)
                       _buildRowWithIconButton(
                         icon: Icons.map,
-                        text: data['titikjemput']?.toString() ?? '-',
+                        text: 'Lihat Titik Jemput',
                         onPressed: () => _launchGoogleMap(data['titikjemput']),
                       ),
                     _buildRowWithIcon(
-                      Icons.phone,
-                      data['telepon']?.toString() ?? '-',
-                      fontSize: 18,
-                    ),
+                        Icons.phone, data['telepon']?.toString() ?? '-',
+                        fontSize: 18),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildSubHeading(
-                          data['tps']?.toString() ?? '-',
-                          fontSize: 16,
-                        ),
-                        _buildSubHeading(
-                          'Berat: ${data['berat'] ?? '-'} kg',
-                          fontSize: 16,
-                        ),
+                        _buildSubHeading(data['tps']?.toString() ?? '-',
+                            fontSize: 16),
+                        _buildSubHeading('Berat: ${data['berat'] ?? '-'} kg',
+                            fontSize: 16),
                       ],
                     ),
-                    if (data['note'] != null &&
-                        data['note'].toString().isNotEmpty)
-                      _buildSubHeading(
-                        'Note: ${data['note']?.toString()}',
-                        fontSize: 16,
-                      ),
-                    _buildSubHeading(
-                      'Status: ${data['status']?.toString() ?? '-'}',
-                      fontSize: 16,
-                    ),
+                    if ((data['note'] as String?)?.isNotEmpty ?? false)
+                      _buildSubHeading('Note: ${data['note']}', fontSize: 16),
+                    _buildSubHeading('Status: ${data['status']}', fontSize: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (showCompleteButton)
                           ElevatedButton(
-                            onPressed: () async {
-                              await updateStatusToCompleted(order.id);
-                            },
+                            onPressed: () => updateStatusToCompleted(order.id),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.purple,
-                              foregroundColor: Colors.white,
-                            ),
+                                backgroundColor: Colors.purple,
+                                foregroundColor: Colors.white),
                             child: const Text('Selesai'),
                           ),
                         if (showDeleteButton)
                           IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () async {
                               final confirm = await showDialog<bool>(
                                 context: context,
-                                builder: (context) => AlertDialog(
+                                builder: (_) => AlertDialog(
                                   title: const Text('Hapus Orderan'),
                                   content: const Text(
                                       'Yakin ingin menghapus orderan ini?'),
                                   actions: [
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
-                                      child: const Text('Batal'),
-                                    ),
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: const Text('Batal')),
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, true),
-                                      child: const Text('Hapus',
-                                          style: TextStyle(color: Colors.red)),
-                                    ),
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: const Text('Hapus',
+                                            style:
+                                                TextStyle(color: Colors.red))),
                                   ],
                                 ),
                               );
                               if (confirm == true) {
                                 await deleteOrder(order.id);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Orderan berhasil dihapus')),
-                                );
+                                    const SnackBar(
+                                        content:
+                                            Text('Orderan berhasil dihapus')));
                               }
                             },
-                            icon: const Icon(Icons.delete, color: Colors.red),
                           ),
                       ],
                     ),
@@ -225,30 +204,11 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
     );
   }
 
-  Widget _buildHeading(String text, {double fontSize = 18}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          color: Colors.purple[800],
-        ),
-      ),
-    );
-  }
-
   Widget _buildSubHeading(String text, {double fontSize = 14}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: Colors.grey[800],
-        ),
-      ),
+      child: Text(text,
+          style: TextStyle(fontSize: fontSize, color: Colors.grey[800])),
     );
   }
 
@@ -261,71 +221,37 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
           Icon(icon, size: fontSize, color: Colors.black),
           const SizedBox(width: 6),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRowWithIconButton({
-    required IconData icon,
-    required String text,
-    required VoidCallback onPressed,
-    double fontSize = 18,
-  }) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.centerLeft,
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: fontSize, color: Colors.black),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                decoration: TextDecoration.underline, // biar keliatan klik-able
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIconText(IconData icon, String text, {double fontSize = 18}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.purple[800], size: fontSize + 2),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.purple[800],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildRowWithIconButton(
+          {required IconData icon,
+          required String text,
+          required VoidCallback onPressed,
+          double fontSize = 18}) =>
+      TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+            padding: EdgeInsets.zero, alignment: Alignment.centerLeft),
+        child: Row(
+          children: [
+            Icon(icon, size: fontSize, color: Colors.black),
+            const SizedBox(width: 6),
+            Text(text,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    decoration: TextDecoration.underline)),
+          ],
+        ),
+      );
 }

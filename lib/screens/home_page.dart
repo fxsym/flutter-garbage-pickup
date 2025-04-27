@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Tambahkan ini untuk cek login
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +44,7 @@ class HomePage extends StatelessWidget {
                 'Temukan cara mudah tukar sampah dan bantu lingkungan!',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey[700], // Teks pendukung lebih ringan
+                  color: Colors.grey[700],
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -34,9 +55,9 @@ class HomePage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple[700],
-                  foregroundColor: Colors.white, // Text color
+                  foregroundColor: Colors.white,
                   elevation: 2,
-                  minimumSize: Size(double.infinity, 48), // Full width
+                  minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -58,7 +79,7 @@ class HomePage extends StatelessWidget {
                 child: Text('Register'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.purple[700],
-                  side: BorderSide(color: Colors.purple), // Border hijau
+                  side: BorderSide(color: Colors.purple),
                   minimumSize: Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dashboard_page.dart'; 
-import 'dashboard_admin_page.dart'; // pastikan file ini ada
 
 class LoginPage extends StatefulWidget {
   @override
@@ -55,16 +53,19 @@ class _LoginPageState extends State<LoginPage> {
         throw Exception('Data pengguna tidak ditemukan');
       }
 
-      String role = userSnapshot['role']; // Pastikan field 'role' ada di Firestore
+      String role =
+          userSnapshot['role']; // Pastikan field 'role' ada di Firestore
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Login berhasil")),
       );
 
       if (role == 'pelanggan') {
-              Navigator.pushReplacementNamed(context, '/dashboard');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/dashboard', (route) => false);
       } else if (role == 'petugas') {
-        Navigator.pushReplacementNamed(context, '/dashboard_admin');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/dashboard_admin', (route) => false);
       } else {
         throw Exception('Role tidak dikenali');
       }
@@ -120,10 +121,12 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                       ),
                       validator: (value) => value!.isEmpty
@@ -138,10 +141,12 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                       ),
                       obscureText: true,
