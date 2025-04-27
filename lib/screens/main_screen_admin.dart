@@ -6,7 +6,7 @@ import 'profile_page.dart';
 
 class MainScreenAdmin extends StatefulWidget {
   final int initialIndex;
-  
+
   MainScreenAdmin({this.initialIndex = 0}); // default tetap dashboard
 
   @override
@@ -42,19 +42,18 @@ class _MainScreenAdminState extends State<MainScreenAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
+        automaticallyImplyLeading: false, // supaya tombol back tidak muncul
+        centerTitle: true, // teks di tengah
+        title: Text(
+          _titles[_selectedIndex],
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
         backgroundColor: Colors.purple,
-        actions: _selectedIndex == 0
-            ? [
-                IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                ),
-              ]
-            : null,
+        elevation: 4,
+        
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

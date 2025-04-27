@@ -30,6 +30,14 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
     await FirebaseFirestore.instance.collection('orders').doc(orderId).delete();
   }
 
+  Future<void> _launchGoogleMap(String mapUrl) async {
+    if (await canLaunch(mapUrl)) {
+      await launch(mapUrl);
+    } else {
+      throw 'Tidak dapat membuka link Google Maps';
+    }
+  }
+
   String formatTimestamp(Timestamp timestamp) {
     DateTime date = timestamp.toDate();
     return DateFormat('dd MMM yyyy, HH:mm').format(date);
@@ -45,7 +53,7 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
             color: Colors.purple[50],
             child: const TabBar(
               labelColor: Colors.purple,
-              unselectedLabelColor: Colors.grey,
+              unselectedLabelColor: Colors.black,
               indicatorColor: Colors.purple,
               tabs: [
                 Tab(text: 'Dalam Proses'),
@@ -66,7 +74,8 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
     );
   }
 
-  Widget _buildOrderList(String status, {bool showCompleteButton = false, bool showDeleteButton = false}) {
+  Widget _buildOrderList(String status,
+      {bool showCompleteButton = false, bool showDeleteButton = false}) {
     return StreamBuilder<QuerySnapshot>(
       stream: getOrders(status),
       builder: (context, snapshot) {
@@ -93,6 +102,7 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
 
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              color: Colors.purple[200],
               elevation: 8,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -103,54 +113,57 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildIconText(Icons.person, data['nama']?.toString() ?? '-', fontSize: 24),
-                    _buildIconText(Icons.access_time, formatTimestamp(data['createdAt']), fontSize: 16),
-                    _buildIconText(Icons.location_on, data['alamat']?.toString() ?? '-', fontSize: 18),
-
-                    if (data['titikjemput'] != null && data['titikjemput'].toString().isNotEmpty)
-                      GestureDetector(
-                        onTap: () async {
-                          final url = data['titikjemput'].toString();
-                          if (await canLaunchUrl(Uri.parse(url))) {
-                            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Tidak dapat membuka link')),
-                            );
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.map, color: Colors.blue),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Lihat Titik Jemput',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                    _buildRowWithIcon(
+                      Icons.person,
+                      data['nama']?.toString() ?? '-',
+                      fontSize: 26,
+                      vertical: 2,
+                    ),
+                    _buildSubHeading(
+                      '${formatTimestamp(data['createdAt'])}',
+                      fontSize: 14,
+                    ),
+                    _buildRowWithIcon(
+                      Icons.location_on,
+                      data['alamat']?.toString() ?? '-',
+                      fontSize: 18,
+                    ),
+                    if (data['titikjemput'] != null &&
+                        data['titikjemput'].toString().isNotEmpty)
+                      _buildRowWithIconButton(
+                        icon: Icons.map,
+                        text: data['titikjemput']?.toString() ?? '-',
+                        onPressed: () => _launchGoogleMap(data['titikjemput']),
                       ),
-
-                    _buildIconText(Icons.phone, data['telepon']?.toString() ?? '-', fontSize: 18),
-
+                    _buildRowWithIcon(
+                      Icons.phone,
+                      data['telepon']?.toString() ?? '-',
+                      fontSize: 18,
+                    ),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildSubHeading(data['tps']?.toString() ?? '-', fontSize: 16),
-                        _buildSubHeading('Berat: ${data['berat'] ?? '-'} kg', fontSize: 16),
+                        _buildSubHeading(
+                          data['tps']?.toString() ?? '-',
+                          fontSize: 16,
+                        ),
+                        _buildSubHeading(
+                          'Berat: ${data['berat'] ?? '-'} kg',
+                          fontSize: 16,
+                        ),
                       ],
                     ),
-                    if (data['note'] != null && data['note'].toString().isNotEmpty)
-                      _buildSubHeading('Note: ${data['note']?.toString()}', fontSize: 16),
-                    _buildSubHeading('Status: ${data['status']?.toString() ?? '-'}', fontSize: 16),
-
+                    if (data['note'] != null &&
+                        data['note'].toString().isNotEmpty)
+                      _buildSubHeading(
+                        'Note: ${data['note']?.toString()}',
+                        fontSize: 16,
+                      ),
+                    _buildSubHeading(
+                      'Status: ${data['status']?.toString() ?? '-'}',
+                      fontSize: 16,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -172,15 +185,19 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
                                 context: context,
                                 builder: (context) => AlertDialog(
                                   title: const Text('Hapus Orderan'),
-                                  content: const Text('Yakin ingin menghapus orderan ini?'),
+                                  content: const Text(
+                                      'Yakin ingin menghapus orderan ini?'),
                                   actions: [
                                     TextButton(
-                                      onPressed: () => Navigator.pop(context, false),
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
                                       child: const Text('Batal'),
                                     ),
                                     TextButton(
-                                      onPressed: () => Navigator.pop(context, true),
-                                      child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Hapus',
+                                          style: TextStyle(color: Colors.red)),
                                     ),
                                   ],
                                 ),
@@ -188,7 +205,9 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
                               if (confirm == true) {
                                 await deleteOrder(order.id);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Orderan berhasil dihapus')),
+                                  const SnackBar(
+                                      content:
+                                          Text('Orderan berhasil dihapus')),
                                 );
                               }
                             },
@@ -227,8 +246,63 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
         text,
         style: TextStyle(
           fontSize: fontSize,
-          color: Colors.grey[700],
+          color: Colors.grey[800],
         ),
+      ),
+    );
+  }
+
+  Widget _buildRowWithIcon(IconData icon, String text,
+      {double fontSize = 18, double vertical = 6}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: vertical),
+      child: Row(
+        children: [
+          Icon(icon, size: fontSize, color: Colors.black),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRowWithIconButton({
+    required IconData icon,
+    required String text,
+    required VoidCallback onPressed,
+    double fontSize = 18,
+  }) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.centerLeft,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: fontSize, color: Colors.black),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                decoration: TextDecoration.underline, // biar keliatan klik-able
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

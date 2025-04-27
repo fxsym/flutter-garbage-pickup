@@ -33,7 +33,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       final data = doc.data();
       if (data != null) {
         setState(() {
@@ -49,7 +52,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (pickedFile != null) {
       setState(() => _newImage = File(pickedFile.path));
     }
@@ -68,7 +72,10 @@ class _ProfilePageState extends State<ProfilePage> {
           photoString = base64Encode(bytes);
         }
 
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'nama': _namaController.text,
           'gender': _selectedGender ?? '',
           'email': _emailController.text,
@@ -90,11 +97,17 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamed(context, '/');
+  }
+
   Widget _buildProfileImage() {
     if (_newImage != null) {
       return Image.file(_newImage!, width: 150, height: 150, fit: BoxFit.cover);
     } else if (_currentPhoto != null && _currentPhoto!.isNotEmpty) {
-      return Image.memory(base64Decode(_currentPhoto!), width: 150, height: 150, fit: BoxFit.cover);
+      return Image.memory(base64Decode(_currentPhoto!),
+          width: 150, height: 150, fit: BoxFit.cover);
     } else {
       return Icon(Icons.person, size: 120, color: Colors.grey);
     }
@@ -131,10 +144,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple, width: 2),
+                          borderSide:
+                              BorderSide(color: Colors.purple, width: 2),
                         ),
                       ),
                       items: ['Laki-laki', 'Perempuan'].map((gender) {
@@ -155,7 +170,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 12),
                     _buildTextField("Email", _emailController, Icons.email),
                     SizedBox(height: 12),
-                    _buildTextField("Username", _usernameController, Icons.account_circle),
+                    _buildTextField(
+                        "Username", _usernameController, Icons.account_circle),
                     SizedBox(height: 12),
                     _buildTextField("Telepon", _teleponController, Icons.phone),
                     SizedBox(height: 24),
@@ -168,7 +184,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         minimumSize: Size(double.infinity, 50),
                         textStyle: TextStyle(fontSize: 18),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: _logout,
+                      icon: Icon(Icons.logout),
+                      label: Text("Logout"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                        minimumSize: Size(double.infinity, 50),
+                        textStyle: TextStyle(fontSize: 18),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -176,7 +204,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, IconData icon) {
+  Widget _buildTextField(
+      String label, TextEditingController controller, IconData icon) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(

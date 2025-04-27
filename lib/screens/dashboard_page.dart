@@ -59,15 +59,29 @@ class _DashboardPageState extends State<DashboardPage> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+                    color: Colors.black,
                   ),
                 ),
           SizedBox(height: 12),
           Text(
             'Terima kasih telah menjadi bagian dari solusi lingkungan 🌱',
-            style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+            style: TextStyle(fontSize: 16, color: Colors.black),
           ),
           SizedBox(height: 24),
+
+          //Tambahkan gambar ditengah disini, dari folder assets/images/dashboard.jpg
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                'assets/images/dashboard.png',
+                width:
+                    MediaQuery.of(context).size.width * 0.8, // Sesuaikan ukuran
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SizedBox(height: 24), // Jarak setelah gambar
 
           // Card: Tukarkan Sampah
           Card(
@@ -75,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            color: Colors.grey[50],
+            color: Colors.purple[200],
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -86,7 +100,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[900],
+                      color: Colors.black,
                     ),
                   ),
                   SizedBox(height: 12),
@@ -94,7 +108,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     'Solusi untuk menyelesaikan masalah sosial tentang kebersihan lingkungan.',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black87,
+                      color: Colors.grey[800],
                     ),
                   ),
                   SizedBox(height: 20),
@@ -103,7 +117,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.purple,
+                        backgroundColor: Colors.grey[600],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -112,7 +126,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         // Navigasi ke halaman penukaran
                         Navigator.pushNamed(context, '/pickup');
                       },
-                      icon: Icon(Icons.recycling),
                       label: Text('Mulai Tukar'),
                     ),
                   ),
