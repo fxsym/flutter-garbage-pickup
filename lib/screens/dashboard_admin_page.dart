@@ -74,7 +74,7 @@ class _DashboardAdminPageState extends State<DashboardAdminPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.asset(
-                'assets/images/dashboard.png',
+                'assets/images/dashboardAdmin.jpg',
                 width: MediaQuery.of(context).size.width * 0.8,
                 fit: BoxFit.cover,
               ),

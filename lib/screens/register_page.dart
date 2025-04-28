@@ -210,10 +210,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelStyle: TextStyle(color: Colors.black),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 2),
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
                   ),
                 ),
                 obscureText: true,
@@ -250,7 +250,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 label: Text("Pilih Gambar"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.purple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -264,7 +264,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Text('Daftar'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.black,
-                        side: BorderSide(color: Colors.green), // Border hijau
+                        side: BorderSide(color: Colors.purple), // Border hijau
                         minimumSize: Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

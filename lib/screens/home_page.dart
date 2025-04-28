@@ -49,6 +49,17 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 32),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/images/pickup.jpg',
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');
