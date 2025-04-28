@@ -19,20 +19,24 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() => _loading = true);
 
+    // Mengambil input textbox dari user
     String userInput = _userOrEmailController.text.trim();
     String password = _passwordController.text;
 
     String email = '';
 
     try {
+      //jika user menggunakan @ dalam text box berarti gunakan email sebagai userInput
       if (userInput.contains('@')) {
         email = userInput;
       } else {
+        // Cek data yang ada di firebase...
         QuerySnapshot snapshot = await FirebaseFirestore.instance
             .collection('users')
             .where('username', isEqualTo: userInput)
             .get();
 
+        // Jika data tidak ditemukan maka keluarkan kode user not found
         if (snapshot.docs.isEmpty) {
           throw FirebaseAuthException(code: 'user-not-found');
         }
@@ -60,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text("Login berhasil")),
       );
 
+      //Cek role user yang login
       if (role == 'pelanggan') {
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/dashboard', (route) => false);
@@ -72,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       String message = 'Terjadi kesalahan saat login.';
 
+      // Memberi eror pesan kepada pengguna
       switch (e.code) {
         case 'user-not-found':
           message = 'Pengguna tidak ditemukan';
@@ -86,6 +92,8 @@ class _LoginPageState extends State<LoginPage> {
           message = 'Login gagal (${e.code})';
       }
 
+
+      //Menampilkan error di snackbar
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {

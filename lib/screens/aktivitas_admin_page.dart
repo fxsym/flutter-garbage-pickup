@@ -71,8 +71,8 @@ class _AktivitasAdminPageState extends State<AktivitasAdminPage> {
           Expanded(
             child: TabBarView(
               children: [
-                _buildOrderList('Pending'),
-                _buildOrderList('Completed'),
+                _buildOrderList('Pending', showCompleteButton: true),
+                _buildOrderList('Completed', showDeleteButton: true),
               ],
             ),
           ),

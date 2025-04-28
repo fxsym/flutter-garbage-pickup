@@ -87,9 +87,10 @@ class _PickupPageState extends State<PickupPage> {
                     SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _submitOrder,
-                      child: Text("Submit Order"),
+                      child: Text("Buat Orderan"),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purple,
                         minimumSize: Size(double.infinity, 50),
                         textStyle: TextStyle(fontSize: 18),
                       ),

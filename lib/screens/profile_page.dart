@@ -102,6 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pushNamed(context, '/');
   }
 
+  
   Widget _buildProfileImage() {
     if (_newImage != null) {
       return Image.file(_newImage!, width: 150, height: 150, fit: BoxFit.cover);

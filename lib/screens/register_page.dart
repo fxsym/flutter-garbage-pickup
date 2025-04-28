@@ -54,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'telepon': _teleponController.text,
           'username': _usernameController.text,
           'email': _emailController.text,
-          'role': 'petugas',
+          'role': 'pelanggan',
           'foto_profile': base64Image ?? '',
         });
 
