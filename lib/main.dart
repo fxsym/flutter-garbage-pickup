@@ -8,7 +8,8 @@ import 'screens/pickup_pages.dart';
 import 'screens/main_screen.dart';
 import 'screens/main_screen_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // <— untuk baca role
+import 'package:cloud_firestore/cloud_firestore.dart'; // untuk baca role
+import 'dart:async'; // tambahan untuk timer splash
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome App',
+      title: 'Waste Change App',
       theme: ThemeData(
         primarySwatch: Colors.green,
         useMaterial3: true,
@@ -35,7 +36,52 @@ class MyApp extends StatelessWidget {
         '/dashboard_admin': (_) => MainScreenAdmin(),
         '/pickup': (_) => PickupPage(),
       },
-      home: AuthWrapper(),
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => AuthWrapper()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white, // atau warna ungu (#800080)
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/Logo.png', // pastikan sudah ada di asset
+              width: 150,
+              height: 150,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Waste Change",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -36,6 +36,7 @@ dependencies:
   image_picker: ^1.1.2
   intl: ^0.20.2
   url_launcher: ^6.3.1
+  flutter_native_splash: ^2.3.4
   
   
 
@@ -57,6 +58,12 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_native_splash:
+  color: "#E1BEE7" # background color
+  image: assets/images/Logo.png # logo kamu (opsional)
+  android: true
+  ios: true
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -95,3 +102,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

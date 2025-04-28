@@ -34,14 +34,23 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true, // Biar teksnya di tengah
-        title: const Text(
-          'WasteChange',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Logo.png',
+              width: MediaQuery.of(context).size.width * 0.1,
+              fit: BoxFit.cover,
+            ),
+            const Text(
+              'WasteChange',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.purple[200],
         elevation: 4,
       ),
       body: _pages[_selectedIndex],

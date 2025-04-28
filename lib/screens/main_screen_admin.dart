@@ -42,18 +42,26 @@ class _MainScreenAdminState extends State<MainScreenAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // supaya tombol back tidak muncul
-        centerTitle: true, // teks di tengah
-        title: Text(
-          _titles[_selectedIndex],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+        automaticallyImplyLeading: false,
+        centerTitle: true, // Biar teksnya di tengah
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Logo.png',
+              width: MediaQuery.of(context).size.width * 0.1,
+              fit: BoxFit.cover,
+            ),
+            const Text(
+              'WasteChange',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.purple[200],
         elevation: 4,
-        
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
